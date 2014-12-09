@@ -1,0 +1,33 @@
+{
+    "name": "firehed/common",
+    "description": "Common PHP tools",
+    "repositories": [
+        {
+            "type":"vcs",
+            "url":"git@git.ericstern.com:arctools.git"
+        },
+        {
+            "type":"vcs",
+            "url":"git@git.ericstern.com:input.git"
+        }
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eric Stern",
+            "email": "eric@ericstern.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Firehed\\Common\\": "src/"
+        }
+    },
+    "require": {
+        "firehed/arctools": "*@dev",
+        "firehed/input": "*@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
