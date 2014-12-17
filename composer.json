@@ -5,10 +5,6 @@
         {
             "type":"vcs",
             "url":"git@git.ericstern.com:arctools.git"
-        },
-        {
-            "type":"vcs",
-            "url":"git@git.ericstern.com:input.git"
         }
     ],
     "license": "MIT",
@@ -24,8 +20,7 @@
         }
     },
     "require": {
-        "firehed/arctools": "*@dev",
-        "firehed/input": "*@dev"
+        "firehed/arctools": "*@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "*"
