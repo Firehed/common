@@ -16,7 +16,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Firehed\\Common\\": "src/"
+            "Firehed\\Common\\": ["src/", "tests/"]
         }
     },
     "require": {
