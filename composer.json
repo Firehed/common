@@ -1,12 +1,6 @@
 {
     "name": "firehed/common",
     "description": "Common PHP tools",
-    "repositories": [
-        {
-            "type":"vcs",
-            "url":"git@git.ericstern.com:arctools.git"
-        }
-    ],
     "license": "MIT",
     "authors": [
         {
