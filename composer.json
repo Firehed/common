@@ -13,10 +13,8 @@
             "Firehed\\Common\\": ["src/", "tests/"]
         }
     },
-    "require": {
-        "firehed/arctools": "*@dev"
-    },
     "require-dev": {
+        "firehed/arctools": "1.*",
         "phpunit/phpunit": "*"
     }
 }
