@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "hash": "04f172771856e4a37606a5213184545c",
@@ -63,16 +63,16 @@
         },
         {
             "name": "firehed/arctools",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Firehed/arctools.git",
-                "reference": "986a3ead6d277a15a16c1b97507c5294841ffeb8"
+                "reference": "f3245b28e97233ffb04c6a495c8c1d8bffc0a0a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Firehed/arctools/zipball/986a3ead6d277a15a16c1b97507c5294841ffeb8",
-                "reference": "986a3ead6d277a15a16c1b97507c5294841ffeb8",
+                "url": "https://api.github.com/repos/Firehed/arctools/zipball/f3245b28e97233ffb04c6a495c8c1d8bffc0a0a0",
+                "reference": "f3245b28e97233ffb04c6a495c8c1d8bffc0a0a0",
                 "shasum": ""
             },
             "require-dev": {
@@ -95,7 +95,7 @@
                 }
             ],
             "description": "Easily integrate with Arcanist and libphutil",
-            "time": "2014-10-24 21:23:38"
+            "time": "2015-08-18 21:00:14"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
