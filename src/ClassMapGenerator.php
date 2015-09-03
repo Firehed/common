@@ -5,7 +5,6 @@ namespace Firehed\Common;
 use Exception;
 use BadMethodCallException;
 use DomainException;
-use FileFinder;
 
 class ClassMapGenerator {
 
@@ -163,13 +162,22 @@ class ClassMapGenerator {
                 "Call setMethod() before generate()");
         }
 
-        $files = (new FileFinder($this->path))
-            ->withType('f')
-            ->withSuffix('php')
-            ->find();
-
+        $cwd = getcwd();
+        chdir($this->path);
+        $paths = trim(`find . -type f "(" -name '*.php' ")" -print0`);
+        chdir($cwd);
+        if ($paths) {
+            $files = explode("\0", $paths);
+        }
+        else {
+            $files = [];
+        }
         $classes = [];
         foreach ($files as $file) {
+            // Remove leading ./
+            if ('./' == substr($file, 0, 2)) {
+                $file = substr($file, 2);
+            }
             $class = $this->namespace.'\\'.
                 str_replace('/', '\\', substr($file, 0, -4));
 

@@ -14,6 +14,7 @@ require_once __DIR__.'/fixtures/ClassMapGenerator/FooInterface.php';
 class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
 
     const FIXTURE_DIR = '/fixtures/ClassMapGenerator/';
+    const EMPTY_DIR = '/fixtures/ClassMapGenerator/empty';
 
     // These are used in the file write tests
     private $called;
@@ -195,6 +196,20 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
             'FilteredSecond should not be included');
         $this->assertArrayNotHasKey('FilteredNone', $ret,
             'FilteredNone should not be included');
+    }
+
+    /**
+     * @covers ::generate
+     */
+    public function testSearchingEmptyDirectory() {
+        $generator = new ClassMapGenerator();
+        $generator->setMethod('getKey')
+            ->setPath(__DIR__.self::EMPTY_DIR);
+        $ret = $generator->generate();
+        $this->assertArrayHasKey('@gener'.'ated', $ret,
+            'Generated tag should be present');
+        $this->assertCount(1, $ret,
+            'Only the generated tag should be present');
     }
 
     /**
