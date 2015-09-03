@@ -22,6 +22,23 @@ class ClassMapGenerator {
     private $output_file;
     private $path;
     private $writer;
+    private $filters = [];
+
+    /**
+     * Add a filter to be applied during map generation. The named method will
+     * be run on matching classes, and compared against the provided value
+     * using loose comparison. Only if the comparision passes will the the
+     * class be included in the map. This is semantically equivalent to a WHERE
+     * clause in SQL.
+     *
+     * @param string method to call
+     * @param mixed required return value
+     * @return $this
+     */
+    public function addFilter($filter_method, $filter_value)/*: this*/ {
+        $this->filters[$filter_method] = $filter_value;
+        return $this;
+    }
 
     /**
      * Configure output format
@@ -175,6 +192,14 @@ class ClassMapGenerator {
             $obj = new $class;
             if ($this->interface && !$obj instanceof $this->interface) {
                 continue;
+            }
+
+            foreach ($this->filters as $method => $required_value) {
+                $value = call_user_func([$obj, $method]);
+                if ($value != $required_value) {
+                    continue 2; // Stop this loop and the file loop
+                }
+
             }
 
             $routes = (array)call_user_func([$obj, $this->method]);

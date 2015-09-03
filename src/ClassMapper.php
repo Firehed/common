@@ -34,10 +34,16 @@ use InvalidArgumentException;
  * //     string(5) "12345"
  * //   }
  * ```
+ *
+ * Filtering is also supported, and is treated as a simple index into the map.
+ * The filter will be reset after each search. Internally filtering is
+ * performed similarly to the recursive search so it is recommendeda to not use
+ * user-supplied data
  */
 class ClassMapper {
 
     private $map;
+    private $filters = [];
 
     /**
      * @param array|string Map or path to file returning it
@@ -66,12 +72,30 @@ class ClassMapper {
     } // getQuotedString
 
     /**
+     * Apply a filter to the map
+     * @param string Filter to apply
+     * @return $this
+     */
+    public function filter($filter)/*: this*/ {
+        $this->filters[] = $filter;
+        return $this;
+    }
+
+    /**
      * @param string Search term
      * @return pair<string, array> FQ class name and matched data
      * @return pair<null, null> if no match is found
      */
     public function search($path) {
-        return $this->searchRecursive($path, '', $this->map);
+        $target = $this->map;
+        // Since this function works by-reference, filters are automatically
+        // reset after a search. This is the desired behavior.
+        while ($filter = array_shift($this->filters)) {
+            $target = array_key_exists($filter, $target)
+                ? $target[$filter]
+                : [];
+        }
+        return $this->searchRecursive($path, '', $target);
     } // search
 
     private function loadFile($file) {

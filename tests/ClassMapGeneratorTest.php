@@ -3,6 +3,7 @@
 namespace Firehed\Common;
 
 require_once __DIR__.'/fixtures/ClassMapGenerator/AmbigInterface.php';
+require_once __DIR__.'/fixtures/ClassMapGenerator/FilteredInterface.php';
 require_once __DIR__.'/fixtures/ClassMapGenerator/FooInterface.php';
 
 /**
@@ -24,6 +25,16 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
         $this->param1 = null;
         $this->param2 = null;
     } // setUp
+
+    /**
+     * @covers ::addFilter
+     */
+    public function testAddFilter() {
+        $generator = new ClassMapGenerator();
+        $this->assertSame($generator,
+            $generator->addFilter('filterMethod', 'return_value'),
+            'addFilter should return $this');
+    } // testAddFilter
 
     /**
      * @covers ::setMethod
@@ -131,6 +142,60 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
         $generator->setPath(__DIR__)
             ->generate();
     } // testGenerateFailsWithNoMethod
+
+    /** @covers ::generate */
+    public function testNoFilterApplication() {
+        $generator = new ClassMapGenerator();
+        $generator->setMethod('getKey')
+            ->setInterface('FilteredInterface')
+            ->setPath(__DIR__.self::FIXTURE_DIR);
+        $ret = $generator->generate();
+        $this->assertArrayHasKey('FilteredBoth', $ret,
+            'FilteredBoth should be included');
+        $this->assertArrayHasKey('FilteredFirst', $ret,
+            'FilteredFirst should be included');
+        $this->assertArrayHasKey('FilteredSecond', $ret,
+            'FilteredSecond should be included');
+        $this->assertArrayHasKey('FilteredNone', $ret,
+            'FilteredNone should be included');
+    }
+
+    /** @covers ::generate */
+    public function testSingleFilterApplication() {
+        $generator = new ClassMapGenerator();
+        $generator->setMethod('getKey')
+            ->setInterface('FilteredInterface')
+            ->setPath(__DIR__.self::FIXTURE_DIR)
+            ->addFilter('filterMethod', true);
+        $ret = $generator->generate();
+        $this->assertArrayHasKey('FilteredBoth', $ret,
+            'FilteredBoth should be included');
+        $this->assertArrayHasKey('FilteredFirst', $ret,
+            'FilteredFirst should be included');
+        $this->assertArrayNotHasKey('FilteredSecond', $ret,
+            'FilteredSecond should not be included');
+        $this->assertArrayNotHasKey('FilteredNone', $ret,
+            'FilteredNone should not be included');
+    }
+
+    /** @covers ::generate */
+    public function testMultipleFilterApplication() {
+        $generator = new ClassMapGenerator();
+        $generator->setMethod('getKey')
+            ->setInterface('FilteredInterface')
+            ->setPath(__DIR__.self::FIXTURE_DIR)
+            ->addFilter('filterMethod', true)
+            ->addFilter('secondFilterMethod', true);
+        $ret = $generator->generate();
+        $this->assertArrayHasKey('FilteredBoth', $ret,
+            'FilteredBoth should be included');
+        $this->assertArrayNotHasKey('FilteredFirst', $ret,
+            'FilteredFirst should not be included');
+        $this->assertArrayNotHasKey('FilteredSecond', $ret,
+            'FilteredSecond should not be included');
+        $this->assertArrayNotHasKey('FilteredNone', $ret,
+            'FilteredNone should not be included');
+    }
 
     /**
      * @covers ::generate

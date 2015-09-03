@@ -48,6 +48,15 @@ class ClassMapperTest extends \PHPUnit_Framework_TestCase {
     } // testSearch
 
     /**
+     * @covers ::filter
+     */
+    public function testFilter() {
+        $map = $this->getClassMapper();
+        $this->assertSame($map, $map->filter('some_filter'),
+            'filter should be chainable');
+    } // testFilter
+
+    /**
      * @covers ::search
      */
     public function testSearchWithNoDataInMatch() {
@@ -95,6 +104,57 @@ class ClassMapperTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(["id" => "12345"], $data, "Data was incorrect");
     }
 
+    /** @covers ::search */
+    public function testFilteredSearch() {
+        $map = [
+            'GET' => [
+                'user/profile/(?P<id>\d+)' => 'UserProfileGetController',
+                'user/friend/(\d+)' => 'UserFriendGetController',
+                'user/me' => 'UserMeGetController',
+            ],
+            'POST' => [
+                'user/profile/(?P<id>\d+)' => 'UserProfilePostController',
+                'user/friend/(\d+)' => 'UserFriendPostController',
+                'user/me' => 'UserMePostController',
+            ],
+        ];
+        $mapper = new ClassMapper($map);
+        $search = 'user/me';
+        list($class, $data) = $mapper->filter('GET')->search($search);
+        $this->assertEquals('UserMeGetController', $class);
+        $this->assertEquals([], $data);
+        // Filtering should not destroy the original=
+        list($class, $data) = $mapper->filter('POST')->search($search);
+        $this->assertEquals('UserMePostController', $class);
+        $this->assertEquals([], $data);
+        list($class, $data) = $mapper->filter('PATCH')->search($search);
+        $this->assertNull($class, 'Filter with no data should return null on class');
+        $this->assertNull($data, 'Filter with no data should return null on data');
+    }
+
+    /** @covers ::search */
+    public function testMultipleFiltersWithDeepSearch() {
+        $map = [
+            'GET' => [
+                'application/json' => [
+                    'user/' => [
+                        '(?P<id>\d+)' => 'UserIdGetJsonController'
+                    ],
+                ],
+            ],
+        ];
+        $mapper = new ClassMapper($map);
+        list($class, $data) = $mapper->filter('GET')
+            ->filter('application/json')
+            ->search('user/12345');
+        $this->assertSame('UserIdGetJsonController', $class,
+            'The wrong class was returned');
+        $this->assertSame(['id' => '12345'], $data,
+            'The wrong data was returned');
+    } // testMultipleFiltersWithDeepSearch
+
+
+    // -( DataProviders )------------------------------------------------------
 
     public function sources() {
         return [
