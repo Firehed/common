@@ -206,10 +206,9 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
         $generator->setMethod('getKey')
             ->setPath(__DIR__.self::EMPTY_DIR);
         $ret = $generator->generate();
-        $this->assertArrayHasKey('@gener'.'ated', $ret,
-            'Generated tag should be present');
         $this->assertCount(1, $ret,
             'Only the generated tag should be present');
+        $this->checkGenerated($ret);
     }
 
     /**
