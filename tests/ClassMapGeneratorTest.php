@@ -5,6 +5,7 @@ namespace Firehed\Common;
 require_once __DIR__.'/fixtures/ClassMapGenerator/AmbigInterface.php';
 require_once __DIR__.'/fixtures/ClassMapGenerator/FilteredInterface.php';
 require_once __DIR__.'/fixtures/ClassMapGenerator/FooInterface.php';
+require_once __DIR__.'/fixtures/ClassMapGenerator/CategoryInterface.php';
 
 /**
  * @coversDefaultClass Firehed\Common\ClassMapGenerator
@@ -26,6 +27,16 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
         $this->param1 = null;
         $this->param2 = null;
     } // setUp
+
+    /**
+     * @covers ::addCategory
+     */
+    public function testAddCategory() {
+        $generator = new ClassMapGenerator();
+        $this->assertSame($generator,
+            $generator->addCategory('categoryMethod'),
+            'addCategory should return $this');
+    } // testAddCategory
 
     /**
      * @covers ::addFilter
@@ -196,6 +207,40 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
             'FilteredSecond should not be included');
         $this->assertArrayNotHasKey('FilteredNone', $ret,
             'FilteredNone should not be included');
+    }
+
+    /** @covers ::generate */
+    public function testCategoryApplication() {
+        $generator = new ClassMapGenerator();
+        $generator->setMethod('getKey')
+            ->setInterface('CategoryInterface')
+            ->setPath(__DIR__.self::FIXTURE_DIR)
+            ->addCategory('getMethod');
+        $ret = $generator->generate();
+        $this->checkGenerated($ret);
+        $this->assertArrayHasKey('GET', $ret);
+        $this->assertCount(2, $ret['GET'],
+            'The two GET classes should be present');
+        $this->assertArrayHasKey('POST', $ret);
+        $this->assertCount(1, $ret['POST'],
+            'The one POST class should be present');
+    }
+
+    /** @covers ::generate */
+    public function testMultipleCategoryApplication() {
+        $generator = new ClassMapGenerator();
+        $generator->setMethod('getKey')
+            ->setInterface('CategoryInterface')
+            ->setPath(__DIR__.self::FIXTURE_DIR)
+            ->addCategory('getVersion')
+            ->addCategory('getMethod');
+        $ret = $generator->generate();
+        $this->assertArrayHasKey('2', $ret);
+        $this->assertCount(2, $ret['2']);
+        $this->assertArrayHasKey('GET', $ret['2']);
+        $this->assertCount(2, $ret['2']['GET']);
+        $this->assertArrayHasKey('POST', $ret['2']);
+        $this->assertCount(1, $ret['2']['POST']);
     }
 
     /**

@@ -14,6 +14,7 @@ class ClassMapGenerator {
     const FORMAT_JSON = 'json';
     const FORMAT_PHP = 'php';
 
+    private $categories = [];
     private $format = self::FORMAT_AUTO;
     private $interface;
     private $method;
@@ -22,6 +23,20 @@ class ClassMapGenerator {
     private $path;
     private $writer;
     private $filters = [];
+
+    /**
+     * Add a filterable category to the map output. The method(s) will be
+     * called during map generation, and added as subsequent array keys to the
+     * output. These are designed to correspond directly to filters on the
+     * consumption side (e.g. API version, HTTP method, etc)
+     *
+     * @param string method to call
+     * @return self
+     */
+    public function addCategory($category_method) {
+        $this->categories[] = $category_method;
+        return $this;
+    }
 
     /**
      * Add a filter to be applied during map generation. The named method will
@@ -210,15 +225,26 @@ class ClassMapGenerator {
 
             }
 
+            // This is some syntactic trickery to dynamically index into the
+            // $classes array by each of the categories yet modify the original
+            // list.
+            $put = &$classes;
+            foreach ($this->categories as $category) {
+                $idx = call_user_func([$obj, $category]);
+                if (!isset($put[$idx])) {
+                    $put[$idx] = [];
+                }
+                $put = &$put[$idx];
+            }
             $routes = (array)call_user_func([$obj, $this->method]);
             foreach ($routes as $route) {
-                if (isset($classes[$route])) {
+                if (isset($put[$route])) {
                     throw new Exception(sprintf(
                         "The class '%s' is already handling '%s'",
-                        $classes[$route],
+                        $put[$route],
                         $route));
                 }
-                $classes[$route] = get_class($obj);
+                $put[$route] = get_class($obj);
             }
         }
 
