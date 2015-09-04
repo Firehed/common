@@ -230,7 +230,7 @@ class ClassMapGenerator {
             // list.
             $put = &$classes;
             foreach ($this->categories as $category) {
-                $idx = call_user_func([$obj, $category]);
+                $idx = (string)call_user_func([$obj, $category]);
                 if (!isset($put[$idx])) {
                     $put[$idx] = [];
                 }
