@@ -212,7 +212,7 @@ class ClassMapGenerator {
                 continue;
             }
 
-            $obj = new $class;
+            $obj = $rc->newInstanceWithoutConstructor();
             if ($this->interface && !$obj instanceof $this->interface) {
                 continue;
             }

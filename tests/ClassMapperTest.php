@@ -166,7 +166,7 @@ class ClassMapperTest extends \PHPUnit_Framework_TestCase {
 
     public function invalidSources() {
         do {
-            $nonexistant_file = \Filesystem::readRandomCharacters(50);
+            $nonexistant_file = md5(random_bytes(16));
         } while (file_exists($nonexistant_file));
         return [
             [$nonexistant_file],

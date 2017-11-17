@@ -21,7 +21,7 @@ final class OpaqueEnvelope implements JsonSerializable {
         $keylen = strlen($key);
         for ($i = 0; $i < $len; $i++) {
             $s = $string[$i];
-            $k = $key[$key % $keylen];
+            $k = $key[$i % $keylen];
             $out .= chr(ord($s) ^ ord($k));
         }
         return $out;

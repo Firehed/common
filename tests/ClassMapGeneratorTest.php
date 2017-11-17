@@ -368,7 +368,7 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
 
         // Perform a syntax check on the generated output (rather than blindly
         // checking with eval() or something which would be tragically insecure
-        $cmd = csprintf("echo %s | php -l", $this->param2)->getUnmaskedString();
+        $cmd = sprintf("echo %s | php -l", escapeshellarg($this->param2));
         $exec_output = null;
         $return_code = null;
         exec($cmd, $exec_output, $return_code);
