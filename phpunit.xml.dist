@@ -1,5 +1,0 @@
-<phpunit
-	bootstrap="vendor/firehed/arctools/tests/bootstrap.php"
-    forceCoversAnnotation="true"
-	>
-</phpunit>
