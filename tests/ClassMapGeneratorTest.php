@@ -269,6 +269,8 @@ class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasKey('Foo', $ret);
         $this->assertArrayNotHasKey('FooNoInt', $ret,
             'The FooNoInt class should have been excluded');
+        $this->assertArrayNotHasKey('AbstractFoo', $ret,
+            'The AbstractFoo class should have been excluded');
         $this->checkGenerated($ret);
     } // testInterfaceFilterWorks
 

@@ -212,10 +212,14 @@ class ClassMapGenerator {
                 continue;
             }
 
-            $obj = $rc->newInstanceWithoutConstructor();
-            if ($this->interface && !$obj instanceof $this->interface) {
+            if ($rc->isAbstract()) {
                 continue;
             }
+            if ($this->interface && !$rc->implementsInterface($this->interface)) {
+                continue;
+            }
+
+            $obj = $rc->newInstanceWithoutConstructor();
 
             foreach ($this->filters as $method => $required_value) {
                 $value = call_user_func([$obj, $method]);
