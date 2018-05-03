@@ -1,2 +1,2 @@
 /vendor/
-*.swp
+composer.lock

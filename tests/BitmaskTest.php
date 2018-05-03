@@ -7,7 +7,7 @@ namespace Firehed\Common;
  * @covers ::<protected>
  * @covers ::<private>
  */
-class BitmaskTest extends \PHPUnit_Framework_TestCase {
+class BitmaskTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::__construct

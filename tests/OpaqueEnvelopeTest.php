@@ -7,7 +7,7 @@ namespace Firehed\Common;
  * @covers ::<protected>
  * @covers ::<private>
  */
-class OpaqueEnvelopeTest extends \PHPUnit_Framework_TestCase {
+class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::__construct

@@ -7,7 +7,7 @@ namespace Firehed\Common;
  * @covers ::<protected>
  * @covers ::<private>
  */
-class EnumTest extends \PHPUnit_Framework_TestCase {
+class EnumTest extends \PHPUnit\Framework\TestCase {
 
 
 	/**
