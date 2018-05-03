@@ -12,7 +12,7 @@ require_once __DIR__.'/fixtures/ClassMapGenerator/CategoryInterface.php';
  * @covers ::<protected>
  * @covers ::<private>
  */
-class ClassMapGeneratorTest extends \PHPUnit_Framework_TestCase {
+class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase {
 
     const FIXTURE_DIR = '/fixtures/ClassMapGenerator/';
     const EMPTY_DIR = '/fixtures/ClassMapGenerator/empty';

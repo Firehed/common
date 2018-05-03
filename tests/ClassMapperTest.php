@@ -7,7 +7,7 @@ namespace Firehed\Common;
  * @covers ::<protected>
  * @covers ::<private>
  */
-class ClassMapperTest extends \PHPUnit_Framework_TestCase {
+class ClassMapperTest extends \PHPUnit\Framework\TestCase {
 
     private function getClassMapper() {
         $map = [
