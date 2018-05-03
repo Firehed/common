@@ -7,6 +7,10 @@ require_once __DIR__.'/fixtures/ClassMapGenerator/FilteredInterface.php';
 require_once __DIR__.'/fixtures/ClassMapGenerator/FooInterface.php';
 require_once __DIR__.'/fixtures/ClassMapGenerator/CategoryInterface.php';
 
+use BadMethodCallException;
+use DomainException;
+use Exception;
+
 /**
  * @coversDefaultClass Firehed\Common\ClassMapGenerator
  * @covers ::<protected>
@@ -100,19 +104,19 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::setFormat
-     * @expectedException DomainException
      */
     public function testSetInvalidFormat() {
         $generator = new ClassMapGenerator();
+        $this->expectException(DomainException::class);
         $generator->setFormat('this_is_not_a_format');
     } // testSetInvalidFormat
 
     /**
      * @covers ::setFormat
-     * @expectedException BadMethodCallException
      */
     public function testSetFormatThrowsAfterSetOutputFile() {
         $generator = new ClassMapGenerator();
+        $this->expectException(BadMethodCallException::class);
         $generator->setOutputFile('foo.php')
             ->setFormat(ClassMapGenerator::FORMAT_JSON);
     } // testSetFormatThrowsAfterSetOutputFile
@@ -127,7 +131,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase {
             $generator->setFormat($format);
         }
         if ($is_error) {
-            $this->setExpectedException('DomainException');
+            $this->expectException(DomainException::class);
         }
         // When is_error the throw should naturally skip the assert
         $this->assertSame($generator,
@@ -137,20 +141,20 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::generate
-     * @expectedException BadMethodCallException
      */
     public function testGenerateFailsWithNoPath() {
         $generator = new ClassMapGenerator();
+        $this->expectException(BadMethodCallException::class);
         $generator->setMethod('method')
             ->generate();
     } // testGenerateFailsWithNoPath
 
     /**
      * @covers ::generate
-     * @expectedException BadMethodCallException
      */
     public function testGenerateFailsWithNoMethod() {
         $generator = new ClassMapGenerator();
+        $this->expectException(BadMethodCallException::class);
         $generator->setPath(__DIR__)
             ->generate();
     } // testGenerateFailsWithNoMethod
@@ -308,13 +312,13 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase {
 
     /**
      * @covers ::generate
-     * @expectedException Exception
      */
     public function testAmbiguityIsRejected() {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
             ->setInterface('AmbigInterface')
             ->setPath(__DIR__.self::FIXTURE_DIR);
+        $this->expectException(Exception::class);
         $generator->generate();
     } // testAmbiguityIsRejected
 
