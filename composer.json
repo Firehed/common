@@ -8,13 +8,41 @@
             "email": "eric@ericstern.com"
         }
     ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
-            "Firehed\\Common\\": ["src/", "tests/"]
+            "Firehed\\Common\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Firehed\\Common\\": "tests"
+        }
+    },
+    "require": {
+        "php": "^7.3 || ^8"
     },
     "require-dev": {
         "paragonie/random_compat": "^2.0",
-        "phpunit/phpunit": "^6 || ^7"
+        "phpstan/phpstan": "^0.12.77",
+        "phpstan/phpstan-phpunit": "^0.12.17",
+        "phpstan/phpstan-strict-rules": "^0.12.9",
+        "phpunit/phpunit": "^6 || ^7 || ^8 || ^9",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "scripts": {
+        "test": [
+            "@phpunit",
+            "@phpstan",
+            "@phpcs"
+        ],
+        "autofix": "phpcbf",
+        "phpunit": "phpunit",
+        "phpstan": "phpstan analyse",
+        "phpstan-baseline": "phpstan analyse --generate-baseline",
+        "phpcs": "phpcs"
     }
 }
