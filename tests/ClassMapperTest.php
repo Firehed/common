@@ -10,7 +10,7 @@ namespace Firehed\Common;
 class ClassMapperTest extends \PHPUnit\Framework\TestCase
 {
 
-    private function getClassMapper()
+    private function getClassMapper(): void
     {
         $map = [
             'user/profile/(?P<id>\d+)' => 'UserProfileController',
@@ -18,46 +18,46 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase
             'user/me' => 'UserMeController',
         ];
         return new ClassMapper($map);
-    } // getClassMapper
+    }
 
     /**
      * @covers ::__construct
      * @dataProvider sources
      */
-    public function testConstruct($source)
+    public function testConstruct($source): void
     {
         $this->assertInstanceOf(
             'Firehed\Common\ClassMapper',
             new ClassMapper($source)
         );
-    } // testConstruct
+    }
 
     /**
      * @covers ::__construct
      * @dataProvider invalidSources
      * @expectedException InvalidArgumentException
      */
-    public function testInvalidConstruct($source)
+    public function testInvalidConstruct($source): void
     {
         new ClassMapper($source);
-    } // testInvalidConstruct
+    }
 
 
     /**
      * @covers ::search
      */
-    public function testSearch()
+    public function testSearch(): void
     {
         $search_url = 'user/profile/12345';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertEquals("UserProfileController", $class, "Class was incorrect");
         $this->assertEquals(["id" => "12345"], $data, "Data was incorrect");
-    } // testSearch
+    }
 
     /**
      * @covers ::filter
      */
-    public function testFilter()
+    public function testFilter(): void
     {
         $map = $this->getClassMapper();
         $this->assertSame(
@@ -65,44 +65,44 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase
             $map->filter('some_filter'),
             'filter should be chainable'
         );
-    } // testFilter
+    }
 
     /**
      * @covers ::search
      */
-    public function testSearchWithNoDataInMatch()
+    public function testSearchWithNoDataInMatch(): void
     {
         $search_url = 'user/me';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertEquals("UserMeController", $class, "Class was incorrect");
         $this->assertEquals([], $data, "Data was incorrect");
-    } // testSearchWithNoDataInMatch
+    }
 
 
     /**
      * @covers ::search
      */
-    public function testSearchWithNoNamedData()
+    public function testSearchWithNoNamedData(): void
     {
         $search_url = 'user/friend/12345';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertEquals("UserFriendController", $class, "Class was incorrect");
         $this->assertEquals([], $data, "Data was incorrect");
-    } // testSearchWithNoNamedData
+    }
 
     /**
      * @covers ::search
      */
-    public function testSearchNoMatch()
+    public function testSearchNoMatch(): void
     {
         $search_url = 'user/metoo';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertNull($class, "Class was incorrect");
         $this->assertNull($data, "Data was incorrect");
-    } // testSearchNoMatch
+    }
 
     /** @covers ::search */
-    public function testRecursiveSearch()
+    public function testRecursiveSearch(): void
     {
         $map = [
             'user/' => [
@@ -149,7 +149,7 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @covers ::search */
-    public function testMultipleFiltersWithDeepSearch()
+    public function testMultipleFiltersWithDeepSearch(): void
     {
         $map = [
             'GET' => [
@@ -174,7 +174,7 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase
             $data,
             'The wrong data was returned'
         );
-    } // testMultipleFiltersWithDeepSearch
+    }
 
 
     // -( DataProviders )------------------------------------------------------
@@ -186,7 +186,7 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase
             [__DIR__ . '/fixtures/ClassMapper/map.json'], // JSON file
             [__DIR__ . '/fixtures/ClassMapper/map.php'], // PHP file
         ];
-    } // sources
+    }
 
     public function invalidSources()
     {
@@ -198,5 +198,5 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase
             [__DIR__ . '/fixtures/ClassMapper/map.foo'], // Unknown type
             [__DIR__ . '/fixtures/ClassMapper/bad.json'], // Invalid JSON format
         ];
-    } // invalidSources
+    }
 }

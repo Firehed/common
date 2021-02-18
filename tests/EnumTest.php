@@ -16,7 +16,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage Value not a const in enum Firehed\Common\EnumFixture
      */
-    public function testBadValueInConstructThrows()
+    public function testBadValueInConstructThrows(): void
     {
         new EnumFixture(13);
     }
@@ -24,7 +24,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::__construct
      */
-    public function testGoodValueInConstruct()
+    public function testGoodValueInConstruct(): void
     {
         $this->assertInstanceOf('Firehed\Common\Enum', new EnumFixture(EnumFixture::May));
     }
@@ -32,7 +32,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::__construct
      */
-    public function testEmptyConstructUsesDefault()
+    public function testEmptyConstructUsesDefault(): void
     {
         $this->assertInstanceOf('Firehed\Common\Enum', new EnumFixture());
     }
@@ -41,7 +41,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
      * @covers ::__construct
      * @expectedException UnexpectedValueException
      */
-    public function testNoDefaultEnumThrowsOnConstruct()
+    public function testNoDefaultEnumThrowsOnConstruct(): void
     {
         new NoDefaultEnumFixture();
     }
@@ -49,14 +49,14 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::is
      */
-    public function testIsMatchScalar()
+    public function testIsMatchScalar(): void
     {
         $f = new EnumFixture(EnumFixture::January);
         $this->assertTrue($f->is(EnumFixture::January));
     }
 
     /** @covers ::is */
-    public function testIsMatchEnum()
+    public function testIsMatchEnum(): void
     {
         $f = new EnumFixture(EnumFixture::January);
         $test = new EnumFixture(EnumFixture::January);
@@ -66,41 +66,41 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::is
      */
-    public function testIsNoMatchScalar()
+    public function testIsNoMatchScalar(): void
     {
         $f = new EnumFixture(EnumFixture::February);
         $this->assertFalse($f->is(EnumFixture::January));
     }
 
     /** @covers ::is */
-    public function testNoMatchSameClassDifferentValue()
+    public function testNoMatchSameClassDifferentValue(): void
     {
         $f = new EnumFixture(EnumFixture::January);
         $test = new EnumFixture(EnumFixture::February);
         $this->assertFalse($f->is($test));
-    } // testNoMatchSameClassDifferentValue
+    }
 
     /** @covers ::is */
-    public function testNoMatchDifferentClassSameValue()
+    public function testNoMatchDifferentClassSameValue(): void
     {
         $f = new EnumFixture(EnumFixture::January);
         $test = new EnumFixture2(EnumFixture2::January);
         $this->assertFalse($f->is($test));
-    } // testNoMatchDifferentClassSameValue
+    }
 
     /** @covers ::is */
-    public function testNoMatchDifferentClassDifferentValue()
+    public function testNoMatchDifferentClassDifferentValue(): void
     {
         $f = new EnumFixture(EnumFixture::January);
         $test = new EnumFixture2(EnumFixture2::February);
         $this->assertFalse($f->is($test));
-    } // testNoMatchDifferentClassDifferentValue
+    }
 
 
     /**
      * @covers ::getConstList
      */
-    public function testGetConstListWithDefault()
+    public function testGetConstListWithDefault(): void
     {
         $exp =
             [ '__default' => 1
@@ -124,7 +124,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::getConstList
      */
-    public function testGetConstListWithoutDefault()
+    public function testGetConstListWithoutDefault(): void
     {
         $exp =
             [ 'January' => 1
@@ -147,7 +147,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::getValue
      */
-    public function testGetValueWithDefault()
+    public function testGetValueWithDefault(): void
     {
         $m = new EnumFixture();
         $this->assertEquals(EnumFixture::__default, $m->getValue());
@@ -156,7 +156,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::getValue
      */
-    public function testGetValueSpecifiedInConstruct()
+    public function testGetValueSpecifiedInConstruct(): void
     {
         $m = new EnumFixture(EnumFixture::May);
         $this->assertEquals(EnumFixture::May, $m->getValue());
@@ -165,7 +165,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::__invoke
      */
-    public function testInvokeReturnsValue()
+    public function testInvokeReturnsValue(): void
     {
         $m = new EnumFixture(EnumFixture::May);
         $this->assertEquals(EnumFixture::May, $m());
@@ -174,7 +174,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::__callStatic
      */
-    public function testStaticInvocationReturnsEnum()
+    public function testStaticInvocationReturnsEnum(): void
     {
         $exp = new EnumFixture(EnumFixture::May);
         $this->assertEquals($exp, EnumFixture::May(), 'Calling constant as function should return the enum');
@@ -185,7 +185,7 @@ class EnumTest extends \PHPUnit\Framework\TestCase
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage Value 'Firehed\Common\EnumFixture::NonDefinedConstant' not a const in enum Firehed\Common\EnumFixture
      */
-    public function testStaticInvocationOfUndefinedValueThrows()
+    public function testStaticInvocationOfUndefinedValueThrows(): void
     {
         EnumFixture::NonDefinedConstant();
     }

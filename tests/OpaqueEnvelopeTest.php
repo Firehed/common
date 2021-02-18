@@ -13,17 +13,17 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $secret = 'secret';
         $envelope = new OpaqueEnvelope($secret);
         $this->assertInstanceOf('Firehed\Common\OpaqueEnvelope', $envelope);
-    } // testConstruct
+    }
 
     /**
      * @covers ::__toString
      */
-    public function testToStringDoesNotRevealValue()
+    public function testToStringDoesNotRevealValue(): void
     {
         $secret = 'secret';
         $envelope = new OpaqueEnvelope($secret);
@@ -33,12 +33,12 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
             $string,
             'Object should not contain the secret when converted to string'
         );
-    } // testToStringDoesNotRevealValue
+    }
 
     /**
      * @covers ::__debugInfo
      */
-    public function testVarDumpDoesNotRevealValue()
+    public function testVarDumpDoesNotRevealValue(): void
     {
         $secret = 'secret';
         $envelope = new OpaqueEnvelope($secret);
@@ -46,12 +46,12 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
         var_dump($envelope);
         $output = ob_get_clean();
         $this->assertNotContains($secret, $output);
-    } // testVarDumpDoesNotRevealValue
+    }
 
     /**
      * @covers ::open
      */
-    public function testOpen()
+    public function testOpen(): void
     {
         $secret = 'secret';
         $envelope = new OpaqueEnvelope($secret);
@@ -61,12 +61,12 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
             $opened_result,
             'The original string should have been returned'
         );
-    } // testOpen
+    }
 
     /**
      * @covers ::open
      */
-    public function testOpenUnicode()
+    public function testOpenUnicode(): void
     {
         // Unicode filled star (byte values - from `arc unit`)
         $star = "\xE2\x98\x85";
@@ -87,21 +87,21 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
             mb_strlen($opened_result),
             'The opened string was not still a one-character multibyte string'
         );
-    } // testOpenUnicode
+    }
 
     /**
      * @covers ::__sleep
      * @expectedException BadMethodCallException
      */
-    public function testSerializationIsBlocked()
+    public function testSerializationIsBlocked(): void
     {
         serialize(new OpaqueEnvelope('secret'));
-    } // testSerializationIsBlocked
+    }
 
     /**
      * @covers ::jsonSerialize
      */
-    public function testJsonEncodingIsMasked()
+    public function testJsonEncodingIsMasked(): void
     {
         $secret = 'secret';
         $json = json_encode(new OpaqueEnvelope($secret));
@@ -110,5 +110,5 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
             $json,
             'The JSON should not contain the secret'
         );
-    } // testJsonEncodingIsMasked
+    }
 }

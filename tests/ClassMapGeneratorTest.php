@@ -19,25 +19,25 @@ use Exception;
 class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
 {
 
-    const FIXTURE_DIR = '/fixtures/ClassMapGenerator/';
-    const EMPTY_DIR = '/fixtures/ClassMapGenerator/empty';
+    private const FIXTURE_DIR = '/fixtures/ClassMapGenerator/';
+    private const EMPTY_DIR = '/fixtures/ClassMapGenerator/empty';
 
     // These are used in the file write tests
     private $called;
     private $param1;
     private $param2;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->called = false;
         $this->param1 = null;
         $this->param2 = null;
-    } // setUp
+    }
 
     /**
      * @covers ::addCategory
      */
-    public function testAddCategory()
+    public function testAddCategory(): void
     {
         $generator = new ClassMapGenerator();
         $this->assertSame(
@@ -45,12 +45,12 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->addCategory('categoryMethod'),
             'addCategory should return $this'
         );
-    } // testAddCategory
+    }
 
     /**
      * @covers ::addFilter
      */
-    public function testAddFilter()
+    public function testAddFilter(): void
     {
         $generator = new ClassMapGenerator();
         $this->assertSame(
@@ -58,12 +58,12 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->addFilter('filterMethod', 'return_value'),
             'addFilter should return $this'
         );
-    } // testAddFilter
+    }
 
     /**
      * @covers ::setMethod
      */
-    public function testSetMethod()
+    public function testSetMethod(): void
     {
         $generator = new ClassMapGenerator();
         $this->assertSame(
@@ -71,12 +71,12 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->setMethod('someMethod'),
             'setMethod should return $this'
         );
-    } // setMethod
+    }
 
     /**
      * @covers ::setInterface
      */
-    public function testSetInterface()
+    public function testSetInterface(): void
     {
         $generator = new ClassMapGenerator();
         $this->assertSame(
@@ -84,12 +84,12 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->setInterface('SomeNS\SomeInterface'),
             'setInterface should return $this'
         );
-    } // setInterface
+    }
 
     /**
      * @covers ::setNamespace
      */
-    public function testSetNamespace()
+    public function testSetNamespace(): void
     {
         $generator = new ClassMapGenerator();
         $this->assertSame(
@@ -97,12 +97,12 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->setNamespace('Some\Name\Space'),
             'setNamespace should return $this'
         );
-    } // setNamespace
+    }
 
     /**
      * @covers ::setPath
      */
-    public function testSetPath()
+    public function testSetPath(): void
     {
         $generator = new ClassMapGenerator();
         $this->assertSame(
@@ -110,12 +110,12 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->setPath('SomeNS\SomePath'),
             'setPath should return $this'
         );
-    } // setPath
+    }
 
     /**
      * @covers ::setFormat
      */
-    public function testSetFormat()
+    public function testSetFormat(): void
     {
         $generator = new ClassMapGenerator();
         $this->assertSame(
@@ -123,34 +123,34 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->setFormat(ClassMapGenerator::FORMAT_JSON),
             'setFormat should return $this'
         );
-    } // testSetFormat
+    }
 
     /**
      * @covers ::setFormat
      */
-    public function testSetInvalidFormat()
+    public function testSetInvalidFormat(): void
     {
         $generator = new ClassMapGenerator();
         $this->expectException(DomainException::class);
         $generator->setFormat('this_is_not_a_format');
-    } // testSetInvalidFormat
+    }
 
     /**
      * @covers ::setFormat
      */
-    public function testSetFormatThrowsAfterSetOutputFile()
+    public function testSetFormatThrowsAfterSetOutputFile(): void
     {
         $generator = new ClassMapGenerator();
         $this->expectException(BadMethodCallException::class);
         $generator->setOutputFile('foo.php')
             ->setFormat(ClassMapGenerator::FORMAT_JSON);
-    } // testSetFormatThrowsAfterSetOutputFile
+    }
 
     /**
      * @covers ::setOutputFile
      * @dataProvider outputFiles
      */
-    public function testSetOutputFile($file, $is_error, $format = null)
+    public function testSetOutputFile($file, $is_error, $format = null): void
     {
         $generator = new ClassMapGenerator();
         if ($format) {
@@ -165,32 +165,32 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $generator->setOutputFile($file),
             'setOutputFile should return $this'
         );
-    } // testSetOutputFile
+    }
 
     /**
      * @covers ::generate
      */
-    public function testGenerateFailsWithNoPath()
+    public function testGenerateFailsWithNoPath(): void
     {
         $generator = new ClassMapGenerator();
         $this->expectException(BadMethodCallException::class);
         $generator->setMethod('method')
             ->generate();
-    } // testGenerateFailsWithNoPath
+    }
 
     /**
      * @covers ::generate
      */
-    public function testGenerateFailsWithNoMethod()
+    public function testGenerateFailsWithNoMethod(): void
     {
         $generator = new ClassMapGenerator();
         $this->expectException(BadMethodCallException::class);
         $generator->setPath(__DIR__)
             ->generate();
-    } // testGenerateFailsWithNoMethod
+    }
 
     /** @covers ::generate */
-    public function testNoFilterApplication()
+    public function testNoFilterApplication(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -220,7 +220,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @covers ::generate */
-    public function testSingleFilterApplication()
+    public function testSingleFilterApplication(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -251,7 +251,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @covers ::generate */
-    public function testMultipleFilterApplication()
+    public function testMultipleFilterApplication(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -283,7 +283,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @covers ::generate */
-    public function testCategoryApplication()
+    public function testCategoryApplication(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -307,7 +307,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     /** @covers ::generate */
-    public function testMultipleCategoryApplication()
+    public function testMultipleCategoryApplication(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -327,7 +327,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::generate
      */
-    public function testSearchingEmptyDirectory()
+    public function testSearchingEmptyDirectory(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -345,7 +345,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
      * @covers ::generate
      * @covers ::setInterface
      */
-    public function testInterfaceFilterWorks()
+    public function testInterfaceFilterWorks(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -369,7 +369,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::generate
      */
-    public function testNamespacesAreHandledWhenSet()
+    public function testNamespacesAreHandledWhenSet(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -387,7 +387,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::generate
      */
-    public function testNamespacesAreSkippedWhenNot()
+    public function testNamespacesAreSkippedWhenNot(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -403,7 +403,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::generate
      */
-    public function testAmbiguityIsRejected()
+    public function testAmbiguityIsRejected(): void
     {
         $generator = new ClassMapGenerator();
         $generator->setMethod('getKey')
@@ -416,7 +416,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::generate
      */
-    public function testJSONGeneration()
+    public function testJSONGeneration(): void
     {
         $generator = new ClassMapGenerator();
         $path = 'some_path.json';
@@ -454,7 +454,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::generate
      */
-    public function testPHPGeneration()
+    public function testPHPGeneration(): void
     {
         $generator = new ClassMapGenerator();
         $path = 'some_path.php';

@@ -13,27 +13,27 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $mask = new Bitmask(1);
         $this->assertInstanceOf('Firehed\Common\Bitmask', $mask);
-    } // testConstruct
+    }
 
     /**
      * @covers ::__construct
      */
-    public function testConstructWithEnum()
+    public function testConstructWithEnum(): void
     {
         $enum = new EnumForBitmask(EnumForBitmask::THREE);
         $mask = new Bitmask($enum);
         $this->assertInstanceOf('Firehed\Common\Bitmask', $mask);
-    } // testConstructWithEnum
+    }
 
     /**
      * @covers ::has
      * @dataProvider goodBits
      */
-    public function testHasBit(Bitmask $mask, $bit)
+    public function testHasBit(Bitmask $mask, $bit): void
     {
         $this->assertTrue($mask->has($bit));
     }
@@ -42,7 +42,7 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
      * @covers ::has
      * @dataProvider badBits
      */
-    public function testNotHasBit(Bitmask $mask, $bit)
+    public function testNotHasBit(Bitmask $mask, $bit): void
     {
         $this->assertFalse($mask->has($bit));
     }
@@ -52,16 +52,16 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
      * @dataProvider errorBits
      * @expectedException UnexpectedValueException
      */
-    public function testHasBitError(Bitmask $mask, $bit)
+    public function testHasBitError(Bitmask $mask, $bit): void
     {
         $mask->has($bit);
-    } // testHasBitError
+    }
 
     /**
      * @covers ::add
      * @dataProvider addBits
      */
-    public function testAddBit(Bitmask $mask, $bit, $already_has, $negative_bit)
+    public function testAddBit(Bitmask $mask, $bit, $already_has, $negative_bit): void
     {
         $this->assertFalse(
             $mask->has($negative_bit),
@@ -81,13 +81,13 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
             $mask->has($negative_bit),
             'Mask should still not have negative bit after other is added'
         );
-    } // testAddBit
+    }
 
     /**
      * @covers ::remove
      * @dataProvider removeBits
      */
-    public function testRemoveBit(Bitmask $mask, $bit, $already_has, $positive_bit)
+    public function testRemoveBit(Bitmask $mask, $bit, $already_has, $positive_bit): void
     {
         $this->assertTrue(
             $mask->has($positive_bit),
@@ -107,7 +107,7 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
             $mask->has($positive_bit),
             'Mask should still have positive bit after other is removed'
         );
-    } // testRemoveBit
+    }
 
     public function goodBits()
     {
@@ -117,7 +117,7 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
             [new Bitmask(0b11), 0b10],
             [new Bitmask(EnumForBitmask::ONE()), EnumForBitmask::ONE()],
         ];
-    } // goodBits
+    }
 
     public function badBits()
     {
@@ -127,7 +127,7 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
             [new Bitmask(0b10), 0b01],
             [new Bitmask(EnumForBitmask::TWO()), EnumForBitmask::ONE()],
         ];
-    } // badBits
+    }
 
     public function errorBits()
     {
@@ -147,7 +147,7 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
             // Bonus dumbness
             [new Bitmask(EnumForBitmask::ONE()), 'a'],
         ];
-    } // errorBits
+    }
 
     public function addBits()
     {
@@ -158,7 +158,7 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
             [new Bitmask(EnumForBitmask::ONE()), EnumForBitmask::TWO(), false,
                 EnumForBitmask::THREE()],
         ];
-    } // addBits
+    }
 
     public function removeBits()
     {
@@ -169,7 +169,7 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
             [new Bitmask(EnumForBitmask::ALL()), EnumForBitmask::TWO(), true,
                 EnumForBitmask::THREE()],
         ];
-    } // removeBits
+    }
 }
 
 class EnumForBitmask extends Enum
