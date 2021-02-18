@@ -364,7 +364,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             'The AbstractFoo class should have been excluded'
         );
         $this->checkGenerated($ret);
-    } // testInterfaceFilterWorks
+    }
 
     /**
      * @covers ::generate
@@ -382,7 +382,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('A\B\Foo', $ret);
         $this->assertArrayNotHasKey('B\Foo', $ret);
         $this->checkGenerated($ret);
-    } // testNamespacesAreHandledWhenSet
+    }
 
     /**
      * @covers ::generate
@@ -398,7 +398,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayNotHasKey('A\B\Foo', $ret);
         $this->assertArrayNotHasKey('B\Foo', $ret);
         $this->checkGenerated($ret);
-    } // testNamespacesAreSkippedWhenNot
+    }
 
     /**
      * @covers ::generate
@@ -411,7 +411,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             ->setPath(__DIR__ . self::FIXTURE_DIR);
         $this->expectException(Exception::class);
         $generator->generate();
-    } // testAmbiguityIsRejected
+    }
 
     /**
      * @covers ::generate
@@ -447,9 +447,9 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             "Returned JSON should have been the genereted output"
         );
 
-        $this->assertInternalType('array', $ret, 'Generate not an array');
+        $this->assertIsArray($ret, 'Generate not an array');
         $this->checkGenerated($ret);
-    } // testJSONGeneration
+    }
 
     /**
      * @covers ::generate
@@ -485,9 +485,9 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             'Generated output should have been syntactically valid PHP'
         );
 
-        $this->assertInternalType('array', $ret, 'Generate not an array');
+        $this->assertIsArray($ret, 'Generate not an array');
         $this->checkGenerated($ret);
-    } // testPHPGeneration
+    }
 
     private function checkGenerated(array $ret)
     {
@@ -496,7 +496,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             $ret,
             'Return value should contain a generated hint'
         );
-    } // checkGenerated
+    }
 
     public function mockWriter($param1, $param2)
     {
@@ -504,7 +504,7 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->param1 = $param1;
         $this->param2 = $param2;
         return true;
-    } // mockWriter
+    }
 
     public function outputFiles()
     {
@@ -520,5 +520,5 @@ class ClassMapGeneratorTest extends \PHPUnit\Framework\TestCase
             [$dir . 'test.json', true, ClassMapGenerator::FORMAT_PHP],
             [$dir . 'test.php', true, ClassMapGenerator::FORMAT_JSON],
         ];
-    } // outputFiles
+    }
 }

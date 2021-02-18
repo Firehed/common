@@ -2,6 +2,8 @@
 
 namespace Firehed\Common;
 
+use BadMethodCallException;
+
 /**
  * @coversDefaultClass Firehed\Common\OpaqueEnvelope
  * @covers ::<protected>
@@ -91,10 +93,10 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers ::__sleep
-     * @expectedException BadMethodCallException
      */
     public function testSerializationIsBlocked(): void
     {
+        $this->expectException(BadMethodCallException::class);
         serialize(new OpaqueEnvelope('secret'));
     }
 
