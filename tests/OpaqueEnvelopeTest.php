@@ -19,7 +19,8 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
     {
         $secret = 'secret';
         $envelope = new OpaqueEnvelope($secret);
-        $this->assertInstanceOf('Firehed\Common\OpaqueEnvelope', $envelope);
+        // @phpstan-ignore-next-line
+        $this->assertInstanceOf(OpaqueEnvelope::class, $envelope);
     }
 
     /**
@@ -47,7 +48,8 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
         ob_start();
         var_dump($envelope);
         $output = ob_get_clean();
-        $this->assertNotContains($secret, $output);
+        assert($output !== false);
+        $this->assertStringNotContainsString($secret, $output);
     }
 
     /**
@@ -106,8 +108,8 @@ class OpaqueEnvelopeTest extends \PHPUnit\Framework\TestCase
     public function testJsonEncodingIsMasked(): void
     {
         $secret = 'secret';
-        $json = json_encode(new OpaqueEnvelope($secret));
-        $this->assertNotContains(
+        $json = json_encode(new OpaqueEnvelope($secret), JSON_THROW_ON_ERROR);
+        $this->assertStringNotContainsString(
             $secret,
             $json,
             'The JSON should not contain the secret'
