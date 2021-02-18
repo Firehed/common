@@ -2,6 +2,8 @@
 
 namespace Firehed\Common;
 
+use InvalidArgumentException;
+
 /**
  * @coversDefaultClass Firehed\Common\ClassMapper
  * @covers ::<protected>
@@ -10,7 +12,7 @@ namespace Firehed\Common;
 class ClassMapperTest extends \PHPUnit\Framework\TestCase
 {
 
-    private function getClassMapper(): void
+    private function getClassMapper(): ClassMapper
     {
         $map = [
             'user/profile/(?P<id>\d+)' => 'UserProfileController',
@@ -35,10 +37,10 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::__construct
      * @dataProvider invalidSources
-     * @expectedException InvalidArgumentException
      */
     public function testInvalidConstruct($source): void
     {
+        $this->expectException(InvalidArgumentException::class);
         new ClassMapper($source);
     }
 

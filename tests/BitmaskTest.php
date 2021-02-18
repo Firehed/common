@@ -2,6 +2,8 @@
 
 namespace Firehed\Common;
 
+use UnexpectedValueException;
+
 /**
  * @coversDefaultClass Firehed\Common\Bitmask
  * @covers ::<protected>
@@ -50,10 +52,10 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase
     /**
      * @covers ::has
      * @dataProvider errorBits
-     * @expectedException UnexpectedValueException
      */
     public function testHasBitError(Bitmask $mask, $bit): void
     {
+        $this->expectException(UnexpectedValueException::class);
         $mask->has($bit);
     }
 

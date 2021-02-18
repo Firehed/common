@@ -11,15 +11,17 @@ class ClassMapGenerator
 
     // If other format constants are added, be sure to update the setFormat()
     // and generate() methods
-    const FORMAT_AUTO = 'auto';
-    const FORMAT_JSON = 'json';
-    const FORMAT_PHP = 'php';
+    public const FORMAT_AUTO = 'auto';
+    public const FORMAT_JSON = 'json';
+    public const FORMAT_PHP = 'php';
 
+    /** @var string[] */
     private $categories = [];
-    private $format = self::FORMAT_AUTO;
-    private $interface;
-    private $method;
-    private $namespace;
+    /** @var self::FORMAT_* */
+    private string $format = self::FORMAT_AUTO;
+    private string $interface = '';
+    private string $method = '';
+    private string $namespace = '';
     private $output_file;
     private $path;
     private $writer;
@@ -30,11 +32,8 @@ class ClassMapGenerator
      * called during map generation, and added as subsequent array keys to the
      * output. These are designed to correspond directly to filters on the
      * consumption side (e.g. API version, HTTP method, etc)
-     *
-     * @param string method to call
-     * @return self
      */
-    public function addCategory($category_method)
+    public function addCategory(string $category_method): self
     {
         $this->categories[] = $category_method;
         return $this;
@@ -47,11 +46,10 @@ class ClassMapGenerator
      * class be included in the map. This is semantically equivalent to a WHERE
      * clause in SQL.
      *
-     * @param string method to call
-     * @param mixed required return value
+     * @param mixed $filter_value required return value
      * @return $this
      */
-    public function addFilter($filter_method, $filter_value)/*: this*/
+    public function addFilter(string $filter_method, $filter_value): self
     {
         $this->filters[$filter_method] = $filter_value;
         return $this;
@@ -60,10 +58,10 @@ class ClassMapGenerator
     /**
      * Configure output format
      *
-     * @param const __CLASS__::FORMAT_*
-     * @return this
+     * @param self::FORMAT_* $format
+     * @return $this
      */
-    public function setFormat($format)
+    public function setFormat(string $format): self
     {
         if ($this->output_file) {
             throw new BadMethodCallException(sprintf(
@@ -81,64 +79,58 @@ class ClassMapGenerator
         }
         $this->format = $format;
         return $this;
-    } // setFormat
+    }
 
     /**
      * Path to recursively search from
      *
-     * @param string Absolute path
-     * @return this
+     * @return $this
      */
-    public function setPath($path)
+    public function setPath(string $path): self
     {
         $this->path = rtrim($path, DIRECTORY_SEPARATOR);
         return $this;
-    } // setPath
+    }
 
     /**
      * Assume this namespace prefix based on the file path
-     *
-     * @param string Namespace prefix
      * @return $this
      */
-    public function setNamespace($namespace)
+    public function setNamespace(string $namespace): self
     {
         $this->namespace = trim($namespace, '\\');
         return $this;
-    } // setNamespace
+    }
 
     /**
      * If set, found classes that do not implement this interface will be
      * skipped
      *
-     * @param string Interface
-     * @return this
+     * @return $this
      */
-    public function setInterface($interface)
+    public function setInterface(string $interface): self
     {
         $this->interface = trim($interface, '\\');
         return $this;
-    } // setInterface
+    }
 
     /**
      * Method to call on found classes that returns the mapping key
      *
-     * @param string method name
-     * @return this
+     * @return $this
      */
-    public function setMethod($method)
+    public function setMethod(string $method): self
     {
         $this->method = $method;
         return $this;
-    } // setMethod
+    }
 
     /**
      * Write the generated file to this path
      *
-     * @param string Path for file output
-     * @return this
+     * @return $this
      */
-    public function setOutputFile($output_file, callable $writer = null)
+    public function setOutputFile(string $output_file, callable $writer = null): self
     {
         if (!$writer) {
             $writer = 'file_put_contents';
@@ -159,9 +151,8 @@ class ClassMapGenerator
                         "Can not determine the format based on the filename"
                     );
             }
-        }
-        // Verify format/extension match
-        elseif ($ext !== $this->format) {
+        } elseif ($ext !== $this->format) {
+            // Verify format/extension match
             throw new DomainException(
                 "File extension does not match output format"
             );
@@ -170,7 +161,7 @@ class ClassMapGenerator
         $this->output_file = $output_file;
         $this->writer = $writer;
         return $this;
-    } // setOutputFile
+    }
 
     /**
      * Execute code map generation
@@ -282,18 +273,17 @@ class ClassMapGenerator
             call_user_func($this->writer, $this->output_file, $output);
         }
         return $classes;
-    } // generate
+    }
 
-    private function buildPhpOutput(array $classes)
+    private function buildPhpOutput(array $classes): string
     {
         $output = "<?php\n" .
             "return " . var_export($classes, true) . ";\n";
         return $output;
-    } // buildPhpOutput
+    }
 
-    private function buildJsonOutput(array $classes)
+    private function buildJsonOutput(array $classes): string
     {
-        $pretty = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0;
-        return json_encode($classes, $pretty);
-    } // buildJsonOutput
+        return json_encode($classes, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR);
+    }
 }

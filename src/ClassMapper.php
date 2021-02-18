@@ -62,24 +62,24 @@ class ClassMapper
                 "Map was not a valid array or file path"
             );
         }
-    } // __construct
+    }
 
-    public static function getDelimiter()
+    public static function getDelimiter(): string
     {
         return '#';
-    } // getDelimiter
+    }
 
-    public static function getQuotedString($string)
+    public static function getQuotedString(string $string): string
     {
         return preg_quote($string, self::getDelimiter());
-    } // getQuotedString
+    }
 
     /**
      * Apply a filter to the map
      * @param string Filter to apply
      * @return $this
      */
-    public function filter($filter)/*: this*/
+    public function filter($filter): self
     {
         $this->filters[] = $filter;
         return $this;
@@ -101,7 +101,7 @@ class ClassMapper
                 : [];
         }
         return $this->searchRecursive($path, '', $target);
-    } // search
+    }
 
     private function loadFile($file)
     {
@@ -126,7 +126,7 @@ class ClassMapper
                     $info['extension']
                 ));
         }
-    } // loadFile
+    }
 
     private function searchRecursive($path, $base_rule, array $classes)
     {
@@ -148,5 +148,5 @@ class ClassMapper
             }
         }
         return [null, null];
-    } // search
+    }
 }

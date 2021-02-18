@@ -2,6 +2,8 @@
 
 namespace Firehed\Common;
 
+use UnexpectedValueException;
+
 /**
  * @coversDefaultClass Firehed\Common\Enum
  * @covers ::<protected>
@@ -13,11 +15,11 @@ class EnumTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers ::__construct
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage Value not a const in enum Firehed\Common\EnumFixture
      */
     public function testBadValueInConstructThrows(): void
     {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Value not a const in enum Firehed\Common\EnumFixture');
         new EnumFixture(13);
     }
 
@@ -39,10 +41,10 @@ class EnumTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers ::__construct
-     * @expectedException UnexpectedValueException
      */
     public function testNoDefaultEnumThrowsOnConstruct(): void
     {
+        $this->expectException(UnexpectedValueException::class);
         new NoDefaultEnumFixture();
     }
 
@@ -182,11 +184,14 @@ class EnumTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers ::__callStatic
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage Value 'Firehed\Common\EnumFixture::NonDefinedConstant' not a const in enum Firehed\Common\EnumFixture
      */
     public function testStaticInvocationOfUndefinedValueThrows(): void
     {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage(
+            "Value 'Firehed\Common\EnumFixture::NonDefinedConstant' not a const in enum Firehed\Common\EnumFixture"
+        );
+        // @phpstan-ignore-next-line
         EnumFixture::NonDefinedConstant();
     }
 }
