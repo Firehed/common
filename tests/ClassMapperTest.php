@@ -7,9 +7,11 @@ namespace Firehed\Common;
  * @covers ::<protected>
  * @covers ::<private>
  */
-class ClassMapperTest extends \PHPUnit\Framework\TestCase {
+class ClassMapperTest extends \PHPUnit\Framework\TestCase
+{
 
-    private function getClassMapper() {
+    private function getClassMapper()
+    {
         $map = [
             'user/profile/(?P<id>\d+)' => 'UserProfileController',
             'user/friend/(\d+)' => 'UserFriendController',
@@ -22,9 +24,12 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
      * @covers ::__construct
      * @dataProvider sources
      */
-    public function testConstruct($source) {
-        $this->assertInstanceOf('Firehed\Common\ClassMapper',
-            new ClassMapper($source));
+    public function testConstruct($source)
+    {
+        $this->assertInstanceOf(
+            'Firehed\Common\ClassMapper',
+            new ClassMapper($source)
+        );
     } // testConstruct
 
     /**
@@ -32,7 +37,8 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
      * @dataProvider invalidSources
      * @expectedException InvalidArgumentException
      */
-    public function testInvalidConstruct($source) {
+    public function testInvalidConstruct($source)
+    {
         new ClassMapper($source);
     } // testInvalidConstruct
 
@@ -40,7 +46,8 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::search
      */
-    public function testSearch() {
+    public function testSearch()
+    {
         $search_url = 'user/profile/12345';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertEquals("UserProfileController", $class, "Class was incorrect");
@@ -50,16 +57,21 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::filter
      */
-    public function testFilter() {
+    public function testFilter()
+    {
         $map = $this->getClassMapper();
-        $this->assertSame($map, $map->filter('some_filter'),
-            'filter should be chainable');
+        $this->assertSame(
+            $map,
+            $map->filter('some_filter'),
+            'filter should be chainable'
+        );
     } // testFilter
 
     /**
      * @covers ::search
      */
-    public function testSearchWithNoDataInMatch() {
+    public function testSearchWithNoDataInMatch()
+    {
         $search_url = 'user/me';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertEquals("UserMeController", $class, "Class was incorrect");
@@ -70,7 +82,8 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::search
      */
-    public function testSearchWithNoNamedData() {
+    public function testSearchWithNoNamedData()
+    {
         $search_url = 'user/friend/12345';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertEquals("UserFriendController", $class, "Class was incorrect");
@@ -80,7 +93,8 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::search
      */
-    public function testSearchNoMatch() {
+    public function testSearchNoMatch()
+    {
         $search_url = 'user/metoo';
         list($class, $data) = $this->getClassMapper()->search($search_url);
         $this->assertNull($class, "Class was incorrect");
@@ -88,7 +102,8 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
     } // testSearchNoMatch
 
     /** @covers ::search */
-    public function testRecursiveSearch() {
+    public function testRecursiveSearch()
+    {
         $map = [
             'user/' => [
                 'profile/(?P<id>\d+)' => 'UserProfileController',
@@ -105,7 +120,8 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
     }
 
     /** @covers ::search */
-    public function testFilteredSearch() {
+    public function testFilteredSearch()
+    {
         $map = [
             'GET' => [
                 'user/profile/(?P<id>\d+)' => 'UserProfileGetController',
@@ -133,7 +149,8 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
     }
 
     /** @covers ::search */
-    public function testMultipleFiltersWithDeepSearch() {
+    public function testMultipleFiltersWithDeepSearch()
+    {
         $map = [
             'GET' => [
                 'application/json' => [
@@ -147,32 +164,39 @@ class ClassMapperTest extends \PHPUnit\Framework\TestCase {
         list($class, $data) = $mapper->filter('GET')
             ->filter('application/json')
             ->search('user/12345');
-        $this->assertSame('UserIdGetJsonController', $class,
-            'The wrong class was returned');
-        $this->assertSame(['id' => '12345'], $data,
-            'The wrong data was returned');
+        $this->assertSame(
+            'UserIdGetJsonController',
+            $class,
+            'The wrong class was returned'
+        );
+        $this->assertSame(
+            ['id' => '12345'],
+            $data,
+            'The wrong data was returned'
+        );
     } // testMultipleFiltersWithDeepSearch
 
 
     // -( DataProviders )------------------------------------------------------
 
-    public function sources() {
+    public function sources()
+    {
         return [
             [['a' => 'b']], // Straight array input
-            [__DIR__.'/fixtures/ClassMapper/map.json'], // JSON file
-            [__DIR__.'/fixtures/ClassMapper/map.php'], // PHP file
+            [__DIR__ . '/fixtures/ClassMapper/map.json'], // JSON file
+            [__DIR__ . '/fixtures/ClassMapper/map.php'], // PHP file
         ];
     } // sources
 
-    public function invalidSources() {
+    public function invalidSources()
+    {
         do {
             $nonexistant_file = md5(random_bytes(16));
         } while (file_exists($nonexistant_file));
         return [
             [$nonexistant_file],
-            [__DIR__.'/fixtures/ClassMapper/map.foo'], // Unknown type
-            [__DIR__.'/fixtures/ClassMapper/bad.json'], // Invalid JSON format
+            [__DIR__ . '/fixtures/ClassMapper/map.foo'], // Unknown type
+            [__DIR__ . '/fixtures/ClassMapper/bad.json'], // Invalid JSON format
         ];
     } // invalidSources
-
 }

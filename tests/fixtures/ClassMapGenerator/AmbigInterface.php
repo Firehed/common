@@ -1,7 +1,7 @@
 <?php
 
-interface AmbigInterface {
+interface AmbigInterface
+{
 
     public function getKey();
-
 }

@@ -1,6 +1,7 @@
 <?php
-interface FooInterface {
+
+interface FooInterface
+{
 
     public function getKey();
-
 }

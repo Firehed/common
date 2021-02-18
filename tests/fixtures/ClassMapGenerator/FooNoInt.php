@@ -1,9 +1,10 @@
 <?php
 
-class FooNoInt {
+class FooNoInt
+{
 
-    public function getKey() {
+    public function getKey()
+    {
         return __CLASS__;
     }
-
 }

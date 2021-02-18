@@ -7,12 +7,14 @@ namespace Firehed\Common;
  * @covers ::<protected>
  * @covers ::<private>
  */
-class BitmaskTest extends \PHPUnit\Framework\TestCase {
+class BitmaskTest extends \PHPUnit\Framework\TestCase
+{
 
     /**
      * @covers ::__construct
      */
-    public function testConstruct() {
+    public function testConstruct()
+    {
         $mask = new Bitmask(1);
         $this->assertInstanceOf('Firehed\Common\Bitmask', $mask);
     } // testConstruct
@@ -20,7 +22,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
     /**
      * @covers ::__construct
      */
-    public function testConstructWithEnum() {
+    public function testConstructWithEnum()
+    {
         $enum = new EnumForBitmask(EnumForBitmask::THREE);
         $mask = new Bitmask($enum);
         $this->assertInstanceOf('Firehed\Common\Bitmask', $mask);
@@ -30,7 +33,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
      * @covers ::has
      * @dataProvider goodBits
      */
-    public function testHasBit(Bitmask $mask, $bit) {
+    public function testHasBit(Bitmask $mask, $bit)
+    {
         $this->assertTrue($mask->has($bit));
     }
 
@@ -38,7 +42,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
      * @covers ::has
      * @dataProvider badBits
      */
-    public function testNotHasBit(Bitmask $mask, $bit) {
+    public function testNotHasBit(Bitmask $mask, $bit)
+    {
         $this->assertFalse($mask->has($bit));
     }
 
@@ -47,7 +52,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
      * @dataProvider errorBits
      * @expectedException UnexpectedValueException
      */
-    public function testHasBitError(Bitmask $mask, $bit) {
+    public function testHasBitError(Bitmask $mask, $bit)
+    {
         $mask->has($bit);
     } // testHasBitError
 
@@ -55,35 +61,56 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
      * @covers ::add
      * @dataProvider addBits
      */
-    public function testAddBit(Bitmask $mask, $bit, $already_has, $negative_bit) {
-        $this->assertFalse($mask->has($negative_bit),
-            'Mask should not have negative bit before other is added');
+    public function testAddBit(Bitmask $mask, $bit, $already_has, $negative_bit)
+    {
+        $this->assertFalse(
+            $mask->has($negative_bit),
+            'Mask should not have negative bit before other is added'
+        );
         $this->assertSame($already_has, $mask->has($bit));
-        $this->assertSame($mask, $mask->add($bit),
-            'Bitmask::add should be chainable');
-        $this->assertTrue($mask->has($bit),
-            'Mask should have bit after it is added');
-        $this->assertFalse($mask->has($negative_bit),
-            'Mask should still not have negative bit after other is added');
+        $this->assertSame(
+            $mask,
+            $mask->add($bit),
+            'Bitmask::add should be chainable'
+        );
+        $this->assertTrue(
+            $mask->has($bit),
+            'Mask should have bit after it is added'
+        );
+        $this->assertFalse(
+            $mask->has($negative_bit),
+            'Mask should still not have negative bit after other is added'
+        );
     } // testAddBit
 
     /**
      * @covers ::remove
      * @dataProvider removeBits
      */
-    public function testRemoveBit(Bitmask $mask, $bit, $already_has, $positive_bit) {
-        $this->assertTrue($mask->has($positive_bit),
-            'Mask should have positive bit before other is removed');
+    public function testRemoveBit(Bitmask $mask, $bit, $already_has, $positive_bit)
+    {
+        $this->assertTrue(
+            $mask->has($positive_bit),
+            'Mask should have positive bit before other is removed'
+        );
         $this->assertSame($already_has, $mask->has($bit));
-        $this->assertSame($mask, $mask->remove($bit),
-            'Bitmask::removeshould be chainable');
-        $this->assertFalse($mask->has($bit),
-            'Mask should not have bit after it is removed');
-        $this->assertTrue($mask->has($positive_bit),
-            'Mask should still have positive bit after other is removed');
+        $this->assertSame(
+            $mask,
+            $mask->remove($bit),
+            'Bitmask::removeshould be chainable'
+        );
+        $this->assertFalse(
+            $mask->has($bit),
+            'Mask should not have bit after it is removed'
+        );
+        $this->assertTrue(
+            $mask->has($positive_bit),
+            'Mask should still have positive bit after other is removed'
+        );
     } // testRemoveBit
 
-    public function goodBits() {
+    public function goodBits()
+    {
         return [
             [new Bitmask(0b1),  0b1],
             [new Bitmask(0b11), 0b01],
@@ -92,7 +119,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
         ];
     } // goodBits
 
-    public function badBits() {
+    public function badBits()
+    {
         return [
             [new Bitmask(0b01), 0b10],
             [new Bitmask(0b10), 0b11],
@@ -101,7 +129,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
         ];
     } // badBits
 
-    public function errorBits() {
+    public function errorBits()
+    {
         return [
             // Incompatible ENUMs
             [new Bitmask(EnumForBitmask::ONE()), DifferentEnum::ONE()],
@@ -120,7 +149,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
         ];
     } // errorBits
 
-    public function addBits() {
+    public function addBits()
+    {
         return [
             [new Bitmask(0b100), 0b010, false, 0b0001],
             [new Bitmask(0b111), 0b010, true,  0b1001],
@@ -130,7 +160,8 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
         ];
     } // addBits
 
-    public function removeBits() {
+    public function removeBits()
+    {
         return [
             [new Bitmask(0b110), 0b010, true, 0b100],
             [new Bitmask(0b101), 0b010, false, 0b100],
@@ -141,18 +172,18 @@ class BitmaskTest extends \PHPUnit\Framework\TestCase {
     } // removeBits
 }
 
-class EnumForBitmask extends Enum {
+class EnumForBitmask extends Enum
+{
 
     const ONE = 0b1;
     const TWO = 0b10;
     const THREE = 0b100;
 
     const ALL = 0b111;
-
 }
 
-class DifferentEnum extends Enum {
+class DifferentEnum extends Enum
+{
 
     const ONE = 0b1;
-
 }

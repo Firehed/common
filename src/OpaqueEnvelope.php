@@ -5,17 +5,21 @@ namespace Firehed\Common;
 use BadMethodCallException;
 use JsonSerializable;
 
-final class OpaqueEnvelope implements JsonSerializable {
+final class OpaqueEnvelope implements JsonSerializable
+{
 
-    public function __construct($string) {
+    public function __construct($string)
+    {
         $this->value = $this->mask($string, OpaqueEnvelopeKey::getKey());
     } // __construct
 
-    public function open()/*: string */ {
+    public function open()/*: string */
+    {
         return $this->mask($this->value, OpaqueEnvelopeKey::getKey());
     } // open
 
-    private function mask($string, $key)/*: string*/ {
+    private function mask($string, $key)/*: string*/
+    {
         $out = '';
         $len = strlen($string);
         $keylen = strlen($key);
@@ -27,19 +31,22 @@ final class OpaqueEnvelope implements JsonSerializable {
         return $out;
     } // mask
 
-    public function __toString() /*:string */ {
+    public function __toString() /*:string */
+    {
         return '<masked string>';
     } // __toString
 
     // 5.6 magic method to override var_dump
-    public function __debugInfo() /*: array*/ {
+    public function __debugInfo() /*: array*/
+    {
         return [
             'value' => '<masked string>'
         ];
     } // __debugInfo
 
     // Prevent serialization
-    public function __sleep() {
+    public function __sleep()
+    {
         throw new BadMethodCallException('You cannot serialize this object.');
     } // __sleep
 
@@ -49,8 +56,8 @@ final class OpaqueEnvelope implements JsonSerializable {
      * Unfortunately, PHP does not allow throwing an exception from this
      * method, so instead a useless value is returned
      */
-    public function jsonSerialize() /*:string */ {
+    public function jsonSerialize() /*:string */
+    {
         return '<masked string>';
     } // jsonSerialize
-
 }

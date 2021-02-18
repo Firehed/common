@@ -6,7 +6,8 @@ use Exception;
 use BadMethodCallException;
 use DomainException;
 
-class ClassMapGenerator {
+class ClassMapGenerator
+{
 
     // If other format constants are added, be sure to update the setFormat()
     // and generate() methods
@@ -33,7 +34,8 @@ class ClassMapGenerator {
      * @param string method to call
      * @return self
      */
-    public function addCategory($category_method) {
+    public function addCategory($category_method)
+    {
         $this->categories[] = $category_method;
         return $this;
     }
@@ -49,7 +51,8 @@ class ClassMapGenerator {
      * @param mixed required return value
      * @return $this
      */
-    public function addFilter($filter_method, $filter_value)/*: this*/ {
+    public function addFilter($filter_method, $filter_value)/*: this*/
+    {
         $this->filters[$filter_method] = $filter_value;
         return $this;
     }
@@ -60,19 +63,21 @@ class ClassMapGenerator {
      * @param const __CLASS__::FORMAT_*
      * @return this
      */
-    public function setFormat($format) {
+    public function setFormat($format)
+    {
         if ($this->output_file) {
             throw new BadMethodCallException(sprintf(
                 "Call %s before %s",
                 __METHOD__,
-                __CLASS__.'::setOutputFile'));
+                __CLASS__ . '::setOutputFile'
+            ));
         }
         switch ($format) {
-        case self::FORMAT_JSON:
-        case self::FORMAT_PHP:
-            break;
-        default:
-            throw new DomainException("Invalid format");
+            case self::FORMAT_JSON:
+            case self::FORMAT_PHP:
+                break;
+            default:
+                throw new DomainException("Invalid format");
         }
         $this->format = $format;
         return $this;
@@ -84,7 +89,8 @@ class ClassMapGenerator {
      * @param string Absolute path
      * @return this
      */
-    public function setPath($path) {
+    public function setPath($path)
+    {
         $this->path = rtrim($path, DIRECTORY_SEPARATOR);
         return $this;
     } // setPath
@@ -95,7 +101,8 @@ class ClassMapGenerator {
      * @param string Namespace prefix
      * @return $this
      */
-    public function setNamespace($namespace) {
+    public function setNamespace($namespace)
+    {
         $this->namespace = trim($namespace, '\\');
         return $this;
     } // setNamespace
@@ -107,7 +114,8 @@ class ClassMapGenerator {
      * @param string Interface
      * @return this
      */
-    public function setInterface($interface) {
+    public function setInterface($interface)
+    {
         $this->interface = trim($interface, '\\');
         return $this;
     } // setInterface
@@ -118,7 +126,8 @@ class ClassMapGenerator {
      * @param string method name
      * @return this
      */
-    public function setMethod($method) {
+    public function setMethod($method)
+    {
         $this->method = $method;
         return $this;
     } // setMethod
@@ -129,7 +138,8 @@ class ClassMapGenerator {
      * @param string Path for file output
      * @return this
      */
-    public function setOutputFile($output_file, callable $writer = null) {
+    public function setOutputFile($output_file, callable $writer = null)
+    {
         if (!$writer) {
             $writer = 'file_put_contents';
         }
@@ -138,21 +148,23 @@ class ClassMapGenerator {
         // Automatically set output format from filename
         if (self::FORMAT_AUTO === $this->format) {
             switch ($ext) {
-            case 'php':
-                $this->format = self::FORMAT_PHP;
-                break;
-            case 'json':
-                $this->format = self::FORMAT_JSON;
-                break;
-            default:
-                throw new DomainException(
-                    "Can not determine the format based on the filename");
+                case 'php':
+                    $this->format = self::FORMAT_PHP;
+                    break;
+                case 'json':
+                    $this->format = self::FORMAT_JSON;
+                    break;
+                default:
+                    throw new DomainException(
+                        "Can not determine the format based on the filename"
+                    );
             }
         }
         // Verify format/extension match
         elseif ($ext !== $this->format) {
             throw new DomainException(
-                "File extension does not match output format");
+                "File extension does not match output format"
+            );
         }
 
         $this->output_file = $output_file;
@@ -167,14 +179,17 @@ class ClassMapGenerator {
      * @throws RuntimeException if files are bad
      * @return array The generated array
      */
-    public function generate() {
+    public function generate()
+    {
         if (!$this->path) {
             throw new \BadMethodCallException(
-                "Call setPath() before generate()");
+                "Call setPath() before generate()"
+            );
         }
         if (!$this->method) {
             throw new \BadMethodCallException(
-                "Call setMethod() before generate()");
+                "Call setMethod() before generate()"
+            );
         }
 
         $cwd = getcwd();
@@ -183,8 +198,7 @@ class ClassMapGenerator {
         chdir($cwd);
         if ($paths) {
             $files = explode("\0", $paths);
-        }
-        else {
+        } else {
             $files = [];
         }
         $classes = [];
@@ -193,10 +207,10 @@ class ClassMapGenerator {
             if ('./' == substr($file, 0, 2)) {
                 $file = substr($file, 2);
             }
-            $class = $this->namespace.'\\'.
+            $class = $this->namespace . '\\' .
                 str_replace('/', '\\', substr($file, 0, -4));
 
-            $file_path = $this->path.DIRECTORY_SEPARATOR.$file;
+            $file_path = $this->path . DIRECTORY_SEPARATOR . $file;
             require_once $file_path;
 
             if (!class_exists($class, false)) {
@@ -226,7 +240,6 @@ class ClassMapGenerator {
                 if ($value != $required_value) {
                     continue 2; // Stop this loop and the file loop
                 }
-
             }
 
             // This is some syntactic trickery to dynamically index into the
@@ -246,22 +259,23 @@ class ClassMapGenerator {
                     throw new Exception(sprintf(
                         "The class '%s' is already handling '%s'",
                         $put[$route],
-                        $route));
+                        $route
+                    ));
                 }
                 $put[$route] = get_class($obj);
             }
         }
 
-        $classes['@gener'.'ated'] = gmdate('c');
+        $classes['@gener' . 'ated'] = gmdate('c');
         switch ($this->format) {
-        case self::FORMAT_JSON:
-            $output = $this->buildJsonOutput($classes);
-            break;
-        case self::FORMAT_PHP:
-            $output = $this->buildPhpOutput($classes);
-            break;
-        case self::FORMAT_AUTO:
-            break;
+            case self::FORMAT_JSON:
+                $output = $this->buildJsonOutput($classes);
+                break;
+            case self::FORMAT_PHP:
+                $output = $this->buildPhpOutput($classes);
+                break;
+            case self::FORMAT_AUTO:
+                break;
         }
 
         if ($this->output_file) {
@@ -270,15 +284,16 @@ class ClassMapGenerator {
         return $classes;
     } // generate
 
-    private function buildPhpOutput(array $classes) {
-        $output = "<?php\n".
-            "return ".var_export($classes, true).";\n";
+    private function buildPhpOutput(array $classes)
+    {
+        $output = "<?php\n" .
+            "return " . var_export($classes, true) . ";\n";
         return $output;
     } // buildPhpOutput
 
-    private function buildJsonOutput(array $classes) {
+    private function buildJsonOutput(array $classes)
+    {
         $pretty = defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0;
         return json_encode($classes, $pretty);
     } // buildJsonOutput
-
 }
