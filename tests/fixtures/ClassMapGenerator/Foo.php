@@ -1,8 +1,10 @@
 <?php
 
-class Foo implements FooInterface, AmbigInterface {
+class Foo implements FooInterface, AmbigInterface
+{
 
-    public function getKey() {
+    public function getKey()
+    {
         return __CLASS__;
     }
 }

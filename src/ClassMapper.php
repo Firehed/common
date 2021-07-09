@@ -40,7 +40,8 @@ use InvalidArgumentException;
  * performed similarly to the recursive search so it is recommendeda to not use
  * user-supplied data
  */
-class ClassMapper {
+class ClassMapper
+{
 
     private $map;
     private $filters = [];
@@ -50,33 +51,36 @@ class ClassMapper {
      * @return this
      * @throws InvalidArgumentException
      */
-    public function __construct($map) {
+    public function __construct($map)
+    {
         if (is_array($map)) {
             $this->map = $map;
-        }
-        elseif (is_string($map) && file_exists($map)) {
+        } elseif (is_string($map) && file_exists($map)) {
             $this->map = $this->loadFile($map);
-        }
-        else {
+        } else {
             throw new InvalidArgumentException(
-                "Map was not a valid array or file path");
+                "Map was not a valid array or file path"
+            );
         }
-    } // __construct
+    }
 
-    public static function getDelimiter() {
+    public static function getDelimiter(): string
+    {
         return '#';
-    } // getDelimiter
+    }
 
-    public static function getQuotedString($string) {
+    public static function getQuotedString(string $string): string
+    {
         return preg_quote($string, self::getDelimiter());
-    } // getQuotedString
+    }
 
     /**
      * Apply a filter to the map
      * @param string Filter to apply
      * @return $this
      */
-    public function filter($filter)/*: this*/ {
+    public function filter($filter): self
+    {
         $this->filters[] = $filter;
         return $this;
     }
@@ -86,7 +90,8 @@ class ClassMapper {
      * @return pair<string, array> FQ class name and matched data
      * @return pair<null, null> if no match is found
      */
-    public function search($path) {
+    public function search($path)
+    {
         $target = $this->map;
         // Since this function works by-reference, filters are automatically
         // reset after a search. This is the desired behavior.
@@ -96,9 +101,10 @@ class ClassMapper {
                 : [];
         }
         return $this->searchRecursive($path, '', $target);
-    } // search
+    }
 
-    private function loadFile($file) {
+    private function loadFile($file)
+    {
         $info = pathinfo($file);
         switch (strtolower($info['extension'])) {
             case 'php':
@@ -109,21 +115,24 @@ class ClassMapper {
                 if (json_last_error()) {
                     throw new InvalidArgumentException(sprintf(
                         "Could not parse JSON file %s",
-                        $info['extension']));
+                        $info['extension']
+                    ));
                 }
                 return $data;
 
             default:
                 throw new InvalidArgumentException(sprintf(
                     "Not sure how to parse file of type %s",
-                    $info['extension']));
+                    $info['extension']
+                ));
         }
-    } // loadFile
+    }
 
-    private function searchRecursive($path, $base_rule, array $classes) {
+    private function searchRecursive($path, $base_rule, array $classes)
+    {
         foreach ($classes as $rule => $class) {
             $end = is_array($class) ? '' : '$';
-            $pattern = "#^".$base_rule.$rule.$end."#";
+            $pattern = "#^" . $base_rule . $rule . $end . "#";
             // This will allow named matches with (?P<foo>PATTERN) syntax get
             // passed down to an associative array of foo=PATTERN_MATCH
             if (preg_match($pattern, $path, $match)) {
@@ -133,12 +142,11 @@ class ClassMapper {
                     }
                 }
                 if (is_array($class)) {
-                    return $this->searchRecursive($path, $base_rule.$rule, $class);
+                    return $this->searchRecursive($path, $base_rule . $rule, $class);
                 }
                 return [$class, $match];
             }
         }
         return [null, null];
-    } // search
-
+    }
 }

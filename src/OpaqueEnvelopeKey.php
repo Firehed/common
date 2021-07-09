@@ -2,20 +2,23 @@
 
 namespace Firehed\Common;
 
-final class OpaqueEnvelopeKey {
+final class OpaqueEnvelopeKey
+{
 
-    private static $key;
+    private static ?string $key = null;
 
     // Block instanciation
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
-    public static function getKey() {
-        if (!self::$key) {
+    public static function getKey(): string
+    {
+        if (self::$key === null) {
             for ($ii = 0; $ii < 8; $ii++) {
                 self::$key .= md5(mt_rand(), $raw_output = true);
             }
         }
         return self::$key;
-    } // getKey
-
+    }
 }

@@ -2,179 +2,202 @@
 
 namespace Firehed\Common;
 
+use UnexpectedValueException;
+
 /**
  * @coversDefaultClass Firehed\Common\Enum
  * @covers ::<protected>
  * @covers ::<private>
  */
-class EnumTest extends \PHPUnit\Framework\TestCase {
+class EnumTest extends \PHPUnit\Framework\TestCase
+{
 
 
-	/**
-	 * @covers ::__construct
-	 * @expectedException UnexpectedValueException
-	 * @expectedExceptionMessage Value not a const in enum Firehed\Common\EnumFixture
-	 */
-	public function testBadValueInConstructThrows() {
-		new EnumFixture(13);
-	}
+    /**
+     * @covers ::__construct
+     */
+    public function testBadValueInConstructThrows(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Value not a const in enum Firehed\Common\EnumFixture');
+        new EnumFixture(13);
+    }
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testGoodValueInConstruct() {
-		$this->assertInstanceOf('Firehed\Common\Enum', new EnumFixture(EnumFixture::May));
-	}
+    /**
+     * @covers ::__construct
+     */
+    public function testGoodValueInConstruct(): void
+    {
+        $this->assertInstanceOf('Firehed\Common\Enum', new EnumFixture(EnumFixture::May));
+    }
 
-	/**
-	 * @covers ::__construct
-	 */
-	public function testEmptyConstructUsesDefault() {
-		$this->assertInstanceOf('Firehed\Common\Enum', new EnumFixture);
-	}
+    /**
+     * @covers ::__construct
+     */
+    public function testEmptyConstructUsesDefault(): void
+    {
+        $this->assertInstanceOf('Firehed\Common\Enum', new EnumFixture());
+    }
 
-	/**
-	 * @covers ::__construct
-	 * @expectedException UnexpectedValueException
-	 */
-	public function testNoDefaultEnumThrowsOnConstruct() {
-		new NoDefaultEnumFixture;
-	}
+    /**
+     * @covers ::__construct
+     */
+    public function testNoDefaultEnumThrowsOnConstruct(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        new NoDefaultEnumFixture();
+    }
 
-	/**
-	 * @covers ::is
-	 */
-	public function testIsMatchScalar() {
-		$f = new EnumFixture(EnumFixture::January);
-		$this->assertTrue($f->is(EnumFixture::January));
-	}
+    /**
+     * @covers ::is
+     */
+    public function testIsMatchScalar(): void
+    {
+        $f = new EnumFixture(EnumFixture::January);
+        $this->assertTrue($f->is(EnumFixture::January));
+    }
 
-	/** @covers ::is */
-	public function testIsMatchEnum() {
-		$f = new EnumFixture(EnumFixture::January);
-		$test = new EnumFixture(EnumFixture::January);
-		$this->assertTrue($f->is($test));
-	}
+    /** @covers ::is */
+    public function testIsMatchEnum(): void
+    {
+        $f = new EnumFixture(EnumFixture::January);
+        $test = new EnumFixture(EnumFixture::January);
+        $this->assertTrue($f->is($test));
+    }
 
-	/**
-	 * @covers ::is
-	 */
-	public function testIsNoMatchScalar() {
-		$f = new EnumFixture(EnumFixture::February);
-		$this->assertFalse($f->is(EnumFixture::January));
-	}
+    /**
+     * @covers ::is
+     */
+    public function testIsNoMatchScalar(): void
+    {
+        $f = new EnumFixture(EnumFixture::February);
+        $this->assertFalse($f->is(EnumFixture::January));
+    }
 
-	/** @covers ::is */
-	public function testNoMatchSameClassDifferentValue() {
-		$f = new EnumFixture(EnumFixture::January);
-		$test = new EnumFixture(EnumFixture::February);
-		$this->assertFalse($f->is($test));
-	} // testNoMatchSameClassDifferentValue
+    /** @covers ::is */
+    public function testNoMatchSameClassDifferentValue(): void
+    {
+        $f = new EnumFixture(EnumFixture::January);
+        $test = new EnumFixture(EnumFixture::February);
+        $this->assertFalse($f->is($test));
+    }
 
-	/** @covers ::is */
-	public function testNoMatchDifferentClassSameValue() {
-		$f = new EnumFixture(EnumFixture::January);
-		$test = new EnumFixture2(EnumFixture2::January);
-		$this->assertFalse($f->is($test));
-	} // testNoMatchDifferentClassSameValue
+    /** @covers ::is */
+    public function testNoMatchDifferentClassSameValue(): void
+    {
+        $f = new EnumFixture(EnumFixture::January);
+        $test = new EnumFixture2(EnumFixture2::January);
+        $this->assertFalse($f->is($test));
+    }
 
-	/** @covers ::is */
-	public function testNoMatchDifferentClassDifferentValue() {
-		$f = new EnumFixture(EnumFixture::January);
-		$test = new EnumFixture2(EnumFixture2::February);
-		$this->assertFalse($f->is($test));
-	} // testNoMatchDifferentClassDifferentValue
+    /** @covers ::is */
+    public function testNoMatchDifferentClassDifferentValue(): void
+    {
+        $f = new EnumFixture(EnumFixture::January);
+        $test = new EnumFixture2(EnumFixture2::February);
+        $this->assertFalse($f->is($test));
+    }
 
 
-	/**
-	 * @covers ::getConstList
-	 */
-	public function testGetConstListWithDefault() {
-		$exp =
-			[ '__default' => 1
-			, 'January' => 1
-			, 'February' => 2
-			, 'March' => 3
-			, 'April' => 4
-			, 'May' => 5
-			, 'June' => 6
-			, 'July' => 7
-			, 'August' => 8
-			, 'September' => 9
-			, 'October' => 10
-			, 'November' => 11
-			, 'December' => 12
-			];
-		$month = new EnumFixture;
-		$this->assertEquals($exp, $month->getConstList(true));
-	}
+    /**
+     * @covers ::getConstList
+     */
+    public function testGetConstListWithDefault(): void
+    {
+        $exp =
+            [ '__default' => 1
+            , 'January' => 1
+            , 'February' => 2
+            , 'March' => 3
+            , 'April' => 4
+            , 'May' => 5
+            , 'June' => 6
+            , 'July' => 7
+            , 'August' => 8
+            , 'September' => 9
+            , 'October' => 10
+            , 'November' => 11
+            , 'December' => 12
+            ];
+        $month = new EnumFixture();
+        $this->assertEquals($exp, $month->getConstList(true));
+    }
 
-	/**
-	 * @covers ::getConstList
-	 */
-	public function testGetConstListWithoutDefault() {
-		$exp =
-			[ 'January' => 1
-			, 'February' => 2
-			, 'March' => 3
-			, 'April' => 4
-			, 'May' => 5
-			, 'June' => 6
-			, 'July' => 7
-			, 'August' => 8
-			, 'September' => 9
-			, 'October' => 10
-			, 'November' => 11
-			, 'December' => 12
-			];
-		$month = new EnumFixture;
-		$this->assertEquals($exp, $month->getConstList(false));
-	}
+    /**
+     * @covers ::getConstList
+     */
+    public function testGetConstListWithoutDefault(): void
+    {
+        $exp =
+            [ 'January' => 1
+            , 'February' => 2
+            , 'March' => 3
+            , 'April' => 4
+            , 'May' => 5
+            , 'June' => 6
+            , 'July' => 7
+            , 'August' => 8
+            , 'September' => 9
+            , 'October' => 10
+            , 'November' => 11
+            , 'December' => 12
+            ];
+        $month = new EnumFixture();
+        $this->assertEquals($exp, $month->getConstList(false));
+    }
 
-	/**
-	 * @covers ::getValue
-	 */
-	public function testGetValueWithDefault() {
-		$m = new EnumFixture;
-		$this->assertEquals(EnumFixture::__default, $m->getValue());
-	}
+    /**
+     * @covers ::getValue
+     */
+    public function testGetValueWithDefault(): void
+    {
+        $m = new EnumFixture();
+        $this->assertEquals(EnumFixture::__default, $m->getValue());
+    }
 
-	/**
-	 * @covers ::getValue
-	 */
-	public function testGetValueSpecifiedInConstruct() {
-		$m = new EnumFixture(EnumFixture::May);
-		$this->assertEquals(EnumFixture::May, $m->getValue());
-	}
+    /**
+     * @covers ::getValue
+     */
+    public function testGetValueSpecifiedInConstruct(): void
+    {
+        $m = new EnumFixture(EnumFixture::May);
+        $this->assertEquals(EnumFixture::May, $m->getValue());
+    }
 
-	/**
-	 * @covers ::__invoke
-	 */
-	public function testInvokeReturnsValue() {
-		$m = new EnumFixture(EnumFixture::May);
-		$this->assertEquals(EnumFixture::May, $m());
-	}
+    /**
+     * @covers ::__invoke
+     */
+    public function testInvokeReturnsValue(): void
+    {
+        $m = new EnumFixture(EnumFixture::May);
+        $this->assertEquals(EnumFixture::May, $m());
+    }
 
-	/**
-	 * @covers ::__callStatic
-	 */
-	public function testStaticInvocationReturnsEnum() {
-		$exp = new EnumFixture(EnumFixture::May);
-		$this->assertEquals($exp, EnumFixture::May(), 'Calling constant as function should return the enum');
-	}
+    /**
+     * @covers ::__callStatic
+     */
+    public function testStaticInvocationReturnsEnum(): void
+    {
+        $exp = new EnumFixture(EnumFixture::May);
+        $this->assertEquals($exp, EnumFixture::May(), 'Calling constant as function should return the enum');
+    }
 
-	/**
-	 * @covers ::__callStatic
-	 * @expectedException UnexpectedValueException
-	 * @expectedExceptionMessage Value 'Firehed\Common\EnumFixture::NonDefinedConstant' not a const in enum Firehed\Common\EnumFixture
-	 */
-	public function testStaticInvocationOfUndefinedValueThrows() {
-		EnumFixture::NonDefinedConstant();
-	}
-
+    /**
+     * @covers ::__callStatic
+     */
+    public function testStaticInvocationOfUndefinedValueThrows(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage(
+            "Value 'Firehed\Common\EnumFixture::NonDefinedConstant' not a const in enum Firehed\Common\EnumFixture"
+        );
+        // @phpstan-ignore-next-line
+        EnumFixture::NonDefinedConstant();
+    }
 }
 
-class EnumFixture extends Enum {
+class EnumFixture extends Enum
+{
 
     const __default = self::January;
 
@@ -192,15 +215,16 @@ class EnumFixture extends Enum {
     const December = 12;
 }
 
-class EnumFixture2 extends Enum {
+class EnumFixture2 extends Enum
+{
 
     const January = 1;
     const February = 2;
 }
 
-class NoDefaultEnumFixture extends Enum {
+class NoDefaultEnumFixture extends Enum
+{
 
-	const ONE = 1;
-	const TWO = 2;
-
+    const ONE = 1;
+    const TWO = 2;
 }

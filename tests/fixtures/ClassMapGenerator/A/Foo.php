@@ -2,17 +2,21 @@
 
 namespace A;
 
-class Foo implements \FooInterface, \CategoryInterface {
+class Foo implements \FooInterface, \CategoryInterface
+{
 
-    public function getMethod() {
+    public function getMethod()
+    {
         return 'GET';
     }
 
-    public function getVersion() {
+    public function getVersion()
+    {
         return '2';
     }
 
-    public function getKey() {
+    public function getKey()
+    {
         return __CLASS__;
     }
 }

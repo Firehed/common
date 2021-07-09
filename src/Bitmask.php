@@ -2,56 +2,62 @@
 
 namespace Firehed\Common;
 
-final class Bitmask {
+final class Bitmask
+{
 
-    private $mask = 0b0;
+    private int $mask = 0b0;
     private $type = null;
 
-    public function __construct($initial_value = 0) {
+    public function __construct($initial_value = 0)
+    {
         if ($initial_value instanceof Enum) {
             $this->setType(get_class($initial_value));
         }
         $this->checkType($initial_value);
 
         $this->mask = $initial_value;
-    } // __construct
+    }
 
-    private function setType($type) {
+    private function setType($type): self
+    {
         $this->type = $type;
         return $this;
     }
 
-    private function checkType(&$value) {
+    private function checkType(&$value): bool
+    {
         if ($value instanceof Enum && $this->type) {
             if (!$value instanceof $this->type) {
                 throw new \UnexpectedValueException(
-                    "An invalid value type was provided");
+                    "An invalid value type was provided"
+                );
             }
             $value = $value->getValue();
-        }
-        elseif (!is_int($value) || $this->type) {
+        } elseif (!is_int($value) || $this->type) {
             throw new \UnexpectedValueException(
-                "A non-integer, non-enum value was provided");
+                "A non-integer, non-enum value was provided"
+            );
         }
         return true;
-    } // checkType
+    }
 
-    public function add($value) {
+    public function add($value): self
+    {
         $this->checkType($value);
         $this->mask |= $value;
         return $this;
-    } // add
+    }
 
-    public function remove($value) {
+    public function remove($value): self
+    {
         $this->checkType($value);
         $this->mask &= ~$value;
         return $this;
-
     }
 
-    public function has($value) {
+    public function has($value): bool
+    {
         $this->checkType($value);
         return ($this->mask & $value) === $value;
-    } // has
-
+    }
 }
